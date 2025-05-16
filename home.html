@@ -1,0 +1,33 @@
+{%extends 'base.html'%}
+{%block head%}
+<title>Amir todo list</title>
+{%endblock%}
+
+{%block body%}
+<div class="main_flex_box">
+<section class="user_list">
+    <h2>top 5 users</h2>
+    <ul>
+        {%for user in top_users%}
+        <li>
+        <span>name:</span><span> {{user.user_name}}</span> <span>len task:</span> <span> {{user.tasks_count}}</span><span > {{user.contact.city}}</span> 
+        </li>
+        {%endfor%}
+    </ul>
+</section>
+<section class="user_list">
+    <h2>top 5 users</h2>
+    <ul>
+        {%for user in new_users%}
+        <li>
+        <span>name:</span><span> {{user.user_name}}</span> <span>len task:</span> <span> {{user.tasks_count}}</span><span > {{user.contact.city}}</span> 
+        </li>
+        {%endfor%}
+    </ul>
+</section>
+</div>
+
+
+
+{%endblock%}
+

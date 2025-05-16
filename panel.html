@@ -1,0 +1,113 @@
+{%extends 'base.html'%}
+{%block head%}
+<title>Panel|Amir todo list</title>
+{%endblock%}
+
+{%block body%}
+<section class="tasks_box">
+<ul id="tasks">
+{%for task in user.tasks%}
+ <li >  <span onclick="edit(this,'{{task.id}}')">{{task.description}} </span> <span onclick="remove_task(this,'{{task.id}}')" class="don-btn" >done</span> </li> 
+{%endfor%}
+</ul>
+<form name="add" action="javascript:add_task()" method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="add-task-box">
+        <input type="text" placeholder="add new task....." id="description" name="description">
+        <input type="submit" value="add">
+    </div>
+</form>
+</section >
+
+
+
+
+<section class="form-box" style="margin: 10px auto;">
+    <form method="post" action="{{ url_for('panel_blueprint.edit_contact') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="input-group">
+        <label for="phonenumber">phone:</label>
+        <input type="number" id="phonenumber" value="{{user.contact.phone}}" placeholder="phone"  name="phone">
+    </div>
+    <div class="input-group">
+        <label for="city">city:</label>
+        <input type="text" id="city"  value="{{user.contact.city}}" placeholder="tehran"  name="city">
+    </div>
+        <input type="submit" >
+    </form>
+</section>
+
+<script>
+    let tasks=document.getElementById('tasks')
+    let description=document.getElementById('description')
+   const add_task =()=>{
+    fetch("{{url_for('panel_blueprint.add')}}",{method:'post' ,body:new FormData(add)})
+    .then((res)=>{
+        res.json().then((result)=>{
+            if (result.status=='ok'){
+                const li=document.createElement('li')
+                li.style.height='0'
+                li.style.padding='0'
+                li.innerHTML=` <span onclick="edit(this,${result.task_id})">${description.value}</span><span onclick="remove_task(this,${result.task_id})" class="don-btn">done</span>`
+    
+                tasks.appendChild(li)
+                setTimeout(()=>{
+                    li.style.height=li.scrollHeight + "px"
+                    li.style.padding='5px'
+                },300)
+                description.value = " "
+            }else if(result.status== 'nologin')
+               alert('no login') })
+    })
+    }
+    const remove_task=(element,id)=>{
+        let data=new FormData()
+        data.append('id',id)
+        data.append('csrf_token','{{csrf_token()}}')
+
+        fetch("{{url_for('panel_blueprint.remove')}}" ,{
+            method:'post',
+            body:data
+        }).then((res)=>{
+            res.json().then((result)=>{
+                if (result.status=='ok'){
+                    element.parentElement.style.height='0px'
+                    element.parentElement.style.padding='0px'
+                    setTimeout(()=>{
+                        element.parentElement.remove()
+                    },300)
+              
+            }else if(result.status== 'nologin')
+               {alert('no login')} 
+            })
+    })
+        }
+        const edit=(element,id)=>{
+            if (element.innerText != '')
+               element.innerHTML=`<input class='edit_input'  type='text' onfocusout="update_task(${id},this)"  value='${element.innerText}'>`
+        }
+
+    const update_task=(id,element)=>{
+    new_description=element.value
+    let data=new FormData()
+    data.append('id',id)
+    data.append('description',new_description)
+    data.append('csrf_token','{{csrf_token()}}')
+
+    fetch("{{url_for('panel_blueprint.update')}}" ,{
+        method:'post',
+        body:data
+    }).then((res)=>{
+        res.json().then((result)=>{
+            if (result.status=='ok'){
+                element.parentElement.innerHTML=new_description
+            
+        }else if(result.status== 'nologin')
+            alert('no login') })
+})
+    }
+
+
+    
+</script>
+{%endblock%}

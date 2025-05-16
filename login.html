@@ -1,0 +1,30 @@
+{%extends 'base.html'%}
+{%block head%}
+<title>login | todo list</title>
+{%endblock%}
+{%block body%}
+
+<div class="main_flex_box">
+    <section class="form-box">
+        <h2>login</h2>
+        <form action="{{ url_for('login_blueprint.do_login') }}" method="post">
+            <div class="inputgroup"><label for="loginus">username:</label> <input type="text" name="username" placeholder="username"></div>
+                <div class="inputgroup"> <label for="loginpw">password:</label><input type="password" name="password" placeholder="password"></div>
+            <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+            <input type="submit" value="vurud">
+        </form>
+    </section>
+    <section class="form-box">
+        <h2>register</h2>
+        <form action="{{ url_for('login_blueprint.register') }}" method="post">
+            <div class="inputgroup"><label for="regus">username:</label><input type="text" name="username" placeholder="username" id="regun"></div>
+            <div class="inputgroup"> <label for="regpw">password:</label><input type="password" name="password" placeholder="password" id="regpw"></div>
+            <div class="inputgroup"> <label for="loginpw">password2:</label><input type="password" name="password2" placeholder="password2" id="regpw2"></div>
+            <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+            <input type="submit" value="sabte name">
+        </form>
+    </section>
+    </div>
+    
+
+{%endblock%}
